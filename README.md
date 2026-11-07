@@ -1,58 +1,153 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# StockMart
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem manajemen inventaris berbasis web untuk mengelola barang, stok, supplier, dan transaksi barang masuk/keluar, dibangun dengan **Laravel 13**.
 
-## About Laravel
+Proyek ini dikerjakan sebagai Tugas Kelompok mata kuliah *Pengembangan Sistem Informasi Berbasis Web Lanjut*, Program Studi Sistem Informasi.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Deskripsi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Pencatatan stok secara manual rawan menimbulkan selisih data dan menyulitkan pelacakan barang. StockMart menyediakan pencatatan barang, penerimaan dan pengeluaran barang, peringatan stok menipis, serta laporan, dengan hak akses yang dibedakan berdasarkan peran pengguna.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fitur Utama
 
-## Learning Laravel
+- **Dashboard**: total jenis barang, total stok, jumlah barang hampir habis, jumlah transaksi masuk/keluar, dan grafik transaksi persediaan.
+- **Manajemen barang**: CRUD barang (kode, nama, kategori, satuan, harga beli/jual, stok minimum, foto), pencarian, dan filter.
+- **Manajemen kategori dan supplier**: CRUD kategori dan supplier beserta informasi kontak.
+- **Barang masuk**: input penerimaan dari supplier, banyak barang sekaligus, unggah bukti penerimaan, stok bertambah otomatis.
+- **Barang keluar**: input pengeluaran dengan alasan, validasi ketersediaan stok, stok berkurang otomatis.
+- **Monitoring stok**: stok tersedia, peringatan stok menipis, barang habis, dan riwayat pergerakan stok.
+- **Laporan**: laporan stok, barang masuk, dan barang keluar dengan filter periode, serta cetak/export.
+- **Manajemen pengguna**: login/logout, CRUD pengguna, profil, role, dan pembatasan akses.
+- **Activity log**: pencatatan aktivitas penting pengguna (khusus Admin).
+- **REST API**: endpoint produk, stok, dan transaksi dengan autentikasi token Sanctum.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Hak Akses per Role
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Fitur | Admin | Kepala Toko | Petugas Gudang |
+|---|---|---|---|
+| Dashboard | Lihat | Lihat | Lihat |
+| Data barang, kategori, supplier | CRUD | Lihat | Lihat |
+| Barang masuk & keluar | Lihat | Lihat | CRUD |
+| Monitoring stok | Lihat | Lihat | Lihat |
+| Laporan | Lihat | Lihat | - |
+| Manajemen pengguna | CRUD | - | - |
+| Activity log | Lihat | - | - |
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Teknologi yang Digunakan
 
-## Agentic Development
+- PHP 8.3 atau lebih baru
+- Laravel 13
+- Blade (templating) dan Laravel Breeze (autentikasi)
+- SQLite (bawaan) atau MySQL/MariaDB
+- Laravel Sanctum (autentikasi API)
+- Vite dan npm (aset front-end)
+- Chart.js (grafik dashboard)
+- Git dan GitHub (kolaborasi)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Konsep Laravel yang Diterapkan
+
+Routing dan resource controller, Eloquent ORM beserta relasi, migration dan seeder, Blade (layout, komponen, stack), Form Request validation, autentikasi, middleware role, Gate/Policy, database transaction, file storage, REST API, dan feature test.
+
+## Struktur Database
+
+| Tabel | Keterangan |
+|---|---|
+| `users` | Pengguna beserta `role` (`admin`, `kepala_toko`, `petugas_gudang`) |
+| `categories` | Kategori barang |
+| `suppliers` | Data supplier |
+| `products` | Data barang, harga, stok, stok minimum, foto |
+| `stock_ins`, `stock_in_items` | Transaksi barang masuk dan rincian barangnya |
+| `stock_outs`, `stock_out_items` | Transaksi barang keluar dan rincian barangnya |
+| `stock_movements` | Riwayat pergerakan stok |
+| `activity_logs` | Catatan aktivitas pengguna |
+
+Relasi utama: Category 1-N Product, Supplier 1-N StockIn, StockIn 1-N StockInItem N-1 Product, StockOut 1-N StockOutItem N-1 Product, User 1-N StockIn/StockOut/ActivityLog.
+
+## Instalasi dan Menjalankan Aplikasi
+
+**Prasyarat:** PHP 8.3+ (dengan ekstensi `mbstring`, `fileinfo`, `openssl`, `curl`, `zip`, `gd`, dan `pdo_sqlite` atau `pdo_mysql`), Composer, Node.js, dan Git.
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clone repository
+git clone https://github.com/Ridd-dsgn/stockmart.git
+cd stockmart
 
-php artisan boost:install
+# 2. Pasang dependensi
+composer install
+npm install
+
+# 3. Siapkan konfigurasi
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**4. Siapkan database.** Dengan SQLite (bawaan), buat file databasenya:
 
-## Contributing
+```bash
+# Linux / macOS / Git Bash
+touch database/database.sqlite
+# Windows CMD
+type nul > database\database.sqlite
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Jika memakai MySQL, ubah `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` di file `.env`, lalu buat database kosongnya.
 
-## Code of Conduct
+```bash
+# 5. Jalankan migrasi dan isi data awal
+php artisan migrate --seed
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 6. Tautkan folder penyimpanan (untuk foto barang dan bukti penerimaan)
+php artisan storage:link
 
-## Security Vulnerabilities
+# 7. Jalankan aplikasi (dua terminal)
+npm run dev
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Buka `http://127.0.0.1:8000` di browser.
 
-## License
+## Akun Demo
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Dibuat otomatis oleh seeder. Semua akun berpassword `password`.
+
+| Role | Email |
+|---|---|
+| Admin | `admin@stockmart.test` |
+| Kepala Toko | `kepala@stockmart.test` |
+| Petugas Gudang | `gudang@stockmart.test` |
+
+## REST API
+
+Semua endpoint selain login memerlukan header `Authorization: Bearer <token>`.
+
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| POST | `/api/login` | Mendapatkan token |
+| GET | `/api/products` | Daftar produk |
+| GET | `/api/products/{id}` | Detail produk |
+| GET | `/api/stocks` | Stok saat ini |
+| GET | `/api/stock-movements` | Riwayat pergerakan stok |
+| GET | `/api/transactions` | Daftar transaksi masuk/keluar |
+
+## Pengujian
+
+```bash
+php artisan test
+```
+
+## Tim Pengembang
+
+| Nama | GitHub | Tanggung jawab |
+|---|---|---|
+| Farid | @username-farid | Setup proyek dan repository, migration, model, seeder, autentikasi, role dan hak akses (middleware, Gate), layout Blade, manajemen pengguna, profil, activity log, REST API Sanctum, feature test |
+| Nashwa | @username-nashwa | CRUD kategori, supplier, dan barang (upload foto, pencarian, filter) |
+| Gosyen | @username-gosyen | Barang masuk, barang keluar, monitoring stok, riwayat pergerakan stok |
+| Michael | @username-michael | Dashboard dan grafik, laporan dengan filter periode, cetak/export laporan |
+
+## Alur Kolaborasi Git
+
+- `main`: versi stabil dan final.
+- `develop`: gabungan semua fitur yang sudah selesai.
+- `feature/*`: satu branch per fitur, digabung ke `develop` lewat Pull Request dan di-review anggota lain.
+- Pesan commit memakai awalan `feat:`, `fix:`, `test:`, `docs:`, `style:`, atau `chore:`.
+- File `.env` tidak di-commit. Gunakan `.env.example` sebagai acuan.
