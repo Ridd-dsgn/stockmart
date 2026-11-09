@@ -30,5 +30,11 @@ class User extends Authenticatable
         ];
     }
 
+    public const ROLES = [
+        'admin'          => 'Admin',
+        'kepala_toko'    => 'Kepala Toko',
+        'petugas_gudang' => 'Petugas Gudang',
+    ];
+
     protected $fillable = ['name', 'email', 'password', 'role'];
 }
