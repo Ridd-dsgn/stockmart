@@ -1,4 +1,4 @@
-# StockMart
+# StockMart 
 
 Sistem manajemen inventaris berbasis web untuk mengelola barang, stok, supplier, dan transaksi barang masuk/keluar, dibangun dengan **Laravel 13**.
 
