@@ -1,4 +1,4 @@
-# StockMart
+# StockMart 
 
 Sistem manajemen inventaris berbasis web untuk mengelola barang, stok, supplier, dan transaksi barang masuk/keluar, dibangun dengan **Laravel 13**.
 
@@ -118,16 +118,29 @@ Dibuat otomatis oleh seeder. Semua akun berpassword `password`.
 
 ## REST API
 
-Semua endpoint selain login memerlukan header `Authorization: Bearer <token>`.
+Autentikasi memakai Laravel Sanctum. Dapatkan token lewat `POST /api/login`, lalu kirim di setiap request berikutnya dengan header `Authorization: Bearer <token>` dan `Accept: application/json`.
 
 | Method | Endpoint | Keterangan |
 |---|---|---|
-| POST | `/api/login` | Mendapatkan token |
-| GET | `/api/products` | Daftar produk |
+| POST | `/api/login` | Login dengan `email` dan `password`, mengembalikan token |
+| GET | `/api/me` | Data pengguna yang sedang login |
+| POST | `/api/logout` | Mencabut token yang sedang dipakai |
+| GET | `/api/products` | Daftar produk (parameter opsional: `q`, `category_id`, `page`) |
 | GET | `/api/products/{id}` | Detail produk |
-| GET | `/api/stocks` | Stok saat ini |
-| GET | `/api/stock-movements` | Riwayat pergerakan stok |
-| GET | `/api/transactions` | Daftar transaksi masuk/keluar |
+| GET | `/api/stocks` | Stok saat ini (parameter opsional: `status=habis` atau `status=menipis`) |
+| GET | `/api/stock-movements` | Riwayat pergerakan stok (parameter opsional: `product_id`) |
+| GET | `/api/transactions` | Daftar transaksi (parameter `type=in` atau `type=out`, bawaan `in`) |
+
+Contoh:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/login \
+  -H "Accept: application/json" -H "Content-Type: application/json" \
+  -d '{"email":"admin@stockmart.test","password":"password"}'
+
+curl http://127.0.0.1:8000/api/products \
+  -H "Accept: application/json" -H "Authorization: Bearer <token>"
+```
 
 ## Pengujian
 
@@ -140,9 +153,9 @@ php artisan test
 | Nama | GitHub | Tanggung jawab |
 |---|---|---|
 | Nashwa | @nashwaisn-ux | Setup proyek dan repository, migration, model, seeder, autentikasi, role dan hak akses (middleware, Gate), layout Blade, manajemen pengguna, profil, activity log, REST API Sanctum, feature test |
-| Farid | @username-farid | CRUD kategori, supplier, dan barang (upload foto, pencarian, filter) |
-| Gosyen | @username-gosyen | Barang masuk, barang keluar, monitoring stok, riwayat pergerakan stok |
-| Michael | @username-michael | Dashboard dan grafik, laporan dengan filter periode, cetak/export laporan |
+| Farid | @Ridd-dsgn | CRUD kategori, supplier, dan barang (upload foto, pencarian, filter) |
+| Gosyen | @GosyenTampubolon | Barang masuk, barang keluar, monitoring stok, riwayat pergerakan stok |
+| Michael | @MichaeL-PanjaitaN | Dashboard dan grafik, laporan dengan filter periode, cetak/export laporan |
 
 ## Alur Kolaborasi Git
 
