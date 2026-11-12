@@ -90,22 +90,6 @@ touch database/database.sqlite
 type nul > database\database.sqlite
 ```
 
-Jika memakai MySQL, ubah `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` di file `.env`, lalu buat database kosongnya.
-
-```bash
-# 5. Jalankan migrasi dan isi data awal
-php artisan migrate --seed
-
-# 6. Tautkan folder penyimpanan (untuk foto barang dan bukti penerimaan)
-php artisan storage:link
-
-# 7. Jalankan aplikasi (dua terminal)
-npm run dev
-php artisan serve
-```
-
-Buka `http://127.0.0.1:8000` di browser.
-
 ## Akun Demo
 
 Dibuat otomatis oleh seeder. Semua akun berpassword `password`.
