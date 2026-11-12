@@ -38,7 +38,7 @@ Pencatatan stok secara manual rawan menimbulkan selisih data dan menyulitkan pel
 - PHP 8.3 atau lebih baru
 - Laravel 13
 - Blade (templating) dan Laravel Breeze (autentikasi)
-- SQLite (bawaan) atau MySQL/MariaDB
+- SQLite (bawaan)
 - Laravel Sanctum (autentikasi API)
 - Vite dan npm (aset front-end)
 - Chart.js (grafik dashboard)
