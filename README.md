@@ -152,8 +152,8 @@ php artisan test
 
 | Nama | GitHub | Tanggung jawab |
 |---|---|---|
-| Nashwa | @nashwaisn-ux | Setup proyek dan repository, migration, model, seeder, autentikasi, role dan hak akses (middleware, Gate), layout Blade, manajemen pengguna, profil, activity log, REST API Sanctum, feature test |
-| Farid | @Ridd-dsgn | CRUD kategori, supplier, dan barang (upload foto, pencarian, filter) |
+| Nashwa | @nashwaisn-ux |  Migration, model, seeder, autentikasi, role dan hak akses (middleware, Gate), layout Blade, manajemen pengguna, profil, activity log, REST API Sanctum, feature test |
+| Farid | @Ridd-dsgn | Setup proyek dan repository, CRUD kategori, supplier, dan barang (upload foto, pencarian, filter) |
 | Gosyen | @GosyenTampubolon | Barang masuk, barang keluar, monitoring stok, riwayat pergerakan stok |
 | Michael | @MichaeL-PanjaitaN | Dashboard dan grafik, laporan dengan filter periode, cetak/export laporan |
 
