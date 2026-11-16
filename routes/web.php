@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +23,16 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('users', UserController::class)->except(['show']);
     Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+});
+
+// Semua role boleh melihat daftar kategori
+Route::middleware('auth')->group(function () {
+    Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+});
+
+// Hanya Admin yang boleh tambah/ubah/hapus
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('categories', CategoryController::class)->except(['index', 'show']);
 });
 
 require __DIR__.'/auth.php';
