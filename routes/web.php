@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,6 +45,16 @@ Route::middleware('auth')->group(function () {
 // Hanya Admin yang boleh tambah/ubah/hapus
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('categories', CategoryController::class)->except(['index', 'show']);
+});
+
+// Semua role boleh melihat daftar barang
+Route::middleware('auth')->group(function () {
+    Route::get('products', [ProductController::class, 'index'])->name('products.index');
+});
+
+// Hanya Admin yang boleh tambah/ubah/hapus
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('products', ProductController::class)->except(['index', 'show']);
 });
 
 require __DIR__.'/auth.php';
