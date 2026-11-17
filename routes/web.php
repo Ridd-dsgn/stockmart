@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SupplierController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,6 +24,16 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('users', UserController::class)->except(['show']);
     Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+});
+
+// Semua role boleh melihat daftar supplier
+Route::middleware('auth')->group(function () {
+    Route::get('suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+});
+
+// Hanya Admin yang boleh tambah/ubah/hapus
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('suppliers', SupplierController::class)->except(['index', 'show']);
 });
 
 // Semua role boleh melihat daftar kategori
