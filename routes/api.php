@@ -12,7 +12,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::apiResource('products', ProductController::class)->only(['index', 'show']);
+    Route::apiResource('products', ProductController::class)->only(['index', 'show'])->names('api.products');
     Route::get('/stocks', [StockController::class, 'index']);
     Route::get('/stock-movements', [StockController::class, 'movements']);
     Route::get('/transactions', [TransactionController::class, 'index']);
