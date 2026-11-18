@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StockInController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,19 @@ Route::middleware('auth')->group(function () {
 
     Route::post('stock-outs', [StockOutController::class, 'store'])
         ->name('stock-outs.store');
+// Semua role boleh melihat daftar barang masuk
+Route::middleware('auth')->group(function () {
+    Route::get('stock-ins', [StockInController::class, 'index'])
+        ->name('stock-ins.index');
+});
+
+// Admin dan Petugas Gudang boleh membuat transaksi barang masuk
+Route::middleware(['auth', 'role:admin,petugas_gudang'])->group(function () {
+    Route::get('stock-ins/create', [StockInController::class, 'create'])
+        ->name('stock-ins.create');
+
+    Route::post('stock-ins', [StockInController::class, 'store'])
+        ->name('stock-ins.store');
 });
 
 require __DIR__.'/auth.php';
