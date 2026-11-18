@@ -1,3 +1,98 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================================================================
+   Tema "Spark" — hijau tua + lime
+   Semua warna diatur lewat variabel di bawah, jadi cukup ubah di sini
+   kalau mau ganti nuansa. Override di bawah memetakan class Tailwind lama
+   (blue / indigo / purple) ke palet baru, sehingga semua halaman ikut
+   berubah tanpa perlu diedit satu per satu.
+   ========================================================================== */
+
+:root {
+    --spark-dark: #0b3321;        /* sidebar, tombol utama, kartu gelap */
+    --spark-dark-2: #12402b;      /* hover / item aktif di sidebar */
+    --spark-darker: #072417;      /* hover tombol utama */
+    --spark-lime: #b6f500;        /* aksen utama */
+    --spark-lime-soft: #ecfccb;   /* latar tint aksen */
+    --spark-lime-faint: #f5fde4;
+    --spark-bg: #f5f5f3;          /* latar halaman */
+    --spark-text: #111c16;
+    --spark-muted: #6b7a72;
+}
+
+html { font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif; }
+
+body.spark {
+    background: var(--spark-bg);
+    color: var(--spark-text);
+    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Pemetaan warna lama -> palet Spark ---------- */
+
+/* Tombol / elemen solid */
+.bg-blue-600, .bg-indigo-600 { background-color: var(--spark-dark) !important; color: #fff; }
+.hover\:bg-blue-700:hover, .hover\:bg-indigo-700:hover { background-color: var(--spark-darker) !important; }
+.border-blue-700, .border-blue-800 { border-color: var(--spark-darker) !important; }
+
+/* Tint lembut (ikon, badge, hover) */
+.bg-blue-50, .bg-indigo-50 { background-color: var(--spark-lime-faint) !important; }
+.bg-blue-100, .bg-indigo-100, .bg-purple-100, .hover\:bg-blue-100:hover { background-color: var(--spark-lime-soft) !important; }
+.border-blue-200, .border-blue-300, .border-indigo-400 { border-color: #c9ec7a !important; }
+
+/* Teks */
+.text-blue-600, .text-blue-700, .text-blue-800,
+.text-indigo-600, .text-indigo-700, .text-indigo-800,
+.text-purple-600, .text-purple-700,
+.hover\:text-blue-800:hover { color: var(--spark-dark) !important; }
+.text-blue-100, .text-indigo-100,
+.hover\:text-blue-100:hover, .hover\:text-indigo-100:hover { color: #d9f99d !important; }
+
+/* Fokus input */
+.focus\:ring-blue-500:focus, .focus\:ring-indigo-500:focus, .focus\:ring-blue-100:focus {
+    --tw-ring-color: rgb(182 245 0 / 0.45) !important;
+}
+.focus\:border-blue-500:focus, .focus\:border-indigo-500:focus, .focus\:border-indigo-700:focus {
+    border-color: var(--spark-dark) !important;
+}
+
+/* Gradient kartu lama -> hijau tua */
+.from-blue-600, .from-indigo-600 { --tw-gradient-from: var(--spark-dark) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(11 51 33 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.to-blue-500, .to-purple-600, .to-indigo-700 { --tw-gradient-to: var(--spark-dark-2) var(--tw-gradient-to-position) !important; }
+
+/* Tombol utama bawaan Breeze (abu gelap) ikut hijau */
+button.bg-gray-800, a.bg-gray-800 { background-color: var(--spark-dark) !important; }
+button.bg-gray-800:hover, a.bg-gray-800:hover { background-color: var(--spark-darker) !important; }
+
+/* ---------- Bentuk umum: kartu lebih membulat & lembut ---------- */
+body.spark .rounded-2xl { border-radius: 1.5rem; }
+body.spark .rounded-xl { border-radius: 1rem; }
+body.spark .border-slate-100,
+body.spark .border-gray-100 { border-color: transparent; }
+body.spark .shadow-sm { box-shadow: 0 1px 2px rgb(11 51 33 / 0.04), 0 6px 18px rgb(11 51 33 / 0.04); }
+
+/* Tabel */
+body.spark thead { background-color: var(--spark-lime-faint) !important; }
+body.spark tbody tr:hover { background-color: #fafdf3 !important; }
+
+/* Komponen khusus layout */
+.spark-card-dark {
+    position: relative; overflow: hidden;
+    background: var(--spark-dark); color: #fff;
+    border-radius: 1.5rem;
+}
+.spark-star { color: var(--spark-lime); }
+.spark-sidebar-scroll::-webkit-scrollbar { width: 6px; }
+.spark-sidebar-scroll::-webkit-scrollbar-thumb { background: rgb(255 255 255 / 0.12); border-radius: 9999px; }
+
+/* Sidebar bisa disembunyikan di desktop */
+#spark-content { transition: margin-left .3s ease; }
+@media (min-width: 1024px) {
+    body.sb-collapsed #sidebar { transform: translateX(-100%); }
+    body.sb-collapsed #spark-content { margin-left: 0; }
+}
+
+[x-cloak] { display: none !important; }

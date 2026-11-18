@@ -7,127 +7,135 @@
 <div class="space-y-6">
 
     {{-- Header --}}
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
-            <p class="mt-1 text-sm text-gray-500">
-                Selamat datang kembali, {{ auth()->user()->name }}!
-                Berikut ringkasan persediaan StockMart.
+            <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">Dashboard</h1>
+            <p class="mt-1 text-sm text-slate-500">
+                Selamat datang kembali, {{ auth()->user()->name }}! Kelola persediaan dengan cermat dan presisi.
             </p>
         </div>
 
-        <div class="text-sm text-gray-500">
-            <span class="font-medium text-blue-600">●</span>
-            Sistem Manajemen Stok
+        <div class="inline-flex items-center gap-3 self-start rounded-full bg-white px-5 py-3 text-sm font-medium text-slate-700 shadow-sm">
+            <x-icon name="calendar" class="h-5 w-5 text-slate-500" />
+            {{ now()->translatedFormat('d F Y') }}
         </div>
     </div>
 
-    {{-- Statistik --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+    @php
+        $totalProducts = \App\Models\Product::count();
+        $lowStock = \App\Models\Product::whereColumn('stock', '<=', 'min_stock')->count();
+    @endphp
 
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm text-gray-500">Total Barang</p>
-                    <h2 class="text-3xl font-bold text-gray-800 mt-2">
-                        {{ \App\Models\Product::count() }}
-                    </h2>
-                </div>
-                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl">
-                    📦
-                </div>
+    {{-- Baris atas: kartu sorotan + statistik utama --}}
+    <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
+
+        <div class="spark-card-dark flex min-h-[15.5rem] flex-col justify-between p-7">
+            <div>
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">
+                    <span class="h-2 w-2 rounded-full {{ $lowStock > 0 ? 'bg-red-500' : 'bg-lime-400' }}"></span>
+                    {{ $lowStock > 0 ? 'Perhatian' : 'Aman' }}
+                </span>
+                <p class="mt-5 text-xs text-white/50">{{ now()->translatedFormat('d F Y') }}</p>
+                <h2 class="mt-1 max-w-[16rem] text-2xl font-bold leading-snug">
+                    @if($lowStock > 0)
+                        {{ $lowStock }} barang mencapai batas stok minimum
+                    @else
+                        Semua stok barang dalam kondisi aman
+                    @endif
+                </h2>
             </div>
-            <p class="text-xs text-gray-400 mt-4">Jumlah produk terdaftar</p>
+            <a href="{{ route('stocks.index') }}"
+               class="relative z-10 inline-flex items-center gap-2 text-sm font-semibold spark-star">
+                Lihat monitoring stok <x-icon name="arrow-right" class="h-4 w-4" />
+            </a>
+            <x-spark-logo class="spark-star pointer-events-none absolute -bottom-6 -right-6 h-40 w-40 rotate-12" />
         </div>
 
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm text-gray-500">Total Kategori</p>
-                    <h2 class="text-3xl font-bold text-gray-800 mt-2">
-                        {{ \App\Models\Category::count() }}
-                    </h2>
-                </div>
-                <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl">
-                    🗂️
-                </div>
+        <div class="rounded-3xl bg-white p-7 shadow-sm">
+            <div class="flex items-center justify-between">
+                <p class="text-sm text-slate-500">Total Barang</p>
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+                    <x-icon name="box" class="h-5 w-5" />
+                </span>
             </div>
-            <p class="text-xs text-gray-400 mt-4">Kategori produk</p>
+            <h2 class="mt-4 text-4xl font-extrabold tracking-tight text-slate-900">{{ number_format($totalProducts) }}</h2>
+            <p class="mt-3 text-xs text-slate-400">Jumlah produk terdaftar</p>
+            <div class="mt-6 h-2 overflow-hidden rounded-full bg-slate-100">
+                <div class="h-full rounded-full" style="background: var(--spark-lime); width: {{ $totalProducts > 0 ? round((($totalProducts - $lowStock) / $totalProducts) * 100) : 100 }}%"></div>
+            </div>
+            <p class="mt-2 text-xs text-slate-500">
+                {{ $totalProducts > 0 ? round((($totalProducts - $lowStock) / $totalProducts) * 100) : 100 }}% stok aman
+            </p>
         </div>
 
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm text-gray-500">Total Supplier</p>
-                    <h2 class="text-3xl font-bold text-gray-800 mt-2">
-                        {{ \App\Models\Supplier::count() }}
-                    </h2>
-                </div>
-                <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-2xl">
-                    🚚
-                </div>
+        <div class="rounded-3xl bg-white p-7 shadow-sm">
+            <div class="flex items-center justify-between">
+                <p class="text-sm text-slate-500">Stok Menipis</p>
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-600">
+                    <x-icon name="alert" class="h-5 w-5" />
+                </span>
             </div>
-            <p class="text-xs text-gray-400 mt-4">Pemasok terdaftar</p>
-        </div>
-
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm text-gray-500">Stok Menipis</p>
-                    <h2 class="text-3xl font-bold text-red-600 mt-2">
-                        {{ \App\Models\Product::whereColumn('stock', '<=', 'min_stock')->count() }}
-                    </h2>
-                </div>
-                <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-2xl">
-                    ⚠️
-                </div>
+            <h2 class="mt-4 text-4xl font-extrabold tracking-tight {{ $lowStock > 0 ? 'text-red-600' : 'text-slate-900' }}">
+                {{ number_format($lowStock) }}
+            </h2>
+            <p class="mt-3 text-xs text-slate-400">Barang perlu diperhatikan</p>
+            <div class="mt-6 h-2 overflow-hidden rounded-full bg-red-50">
+                <div class="h-full rounded-full bg-red-400" style="width: {{ $totalProducts > 0 ? round(($lowStock / $totalProducts) * 100) : 0 }}%"></div>
             </div>
-            <p class="text-xs text-gray-400 mt-4">Barang perlu diperhatikan</p>
+            <p class="mt-2 text-xs text-slate-500">
+                {{ $totalProducts > 0 ? round(($lowStock / $totalProducts) * 100) : 0 }}% dari total barang
+            </p>
         </div>
 
     </div>
 
-    {{-- Transaksi --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    {{-- Statistik pendukung --}}
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
-        <div class="bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl p-6 text-white shadow-sm">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-blue-100 text-sm">Transaksi Barang Masuk</p>
-                    <h2 class="text-3xl font-bold mt-2">
-                        {{ \App\Models\StockIn::count() }}
-                    </h2>
-                    <p class="text-blue-100 text-xs mt-2">Total transaksi barang masuk</p>
-                </div>
-                <div class="text-5xl opacity-80">📥</div>
+        <div class="rounded-3xl bg-white p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+                <p class="text-sm text-slate-500">Total Kategori</p>
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700"><x-icon name="folder" class="h-5 w-5" /></span>
             </div>
-            <a href="{{ route('stock-ins.index') }}"
-               class="inline-block mt-5 text-sm font-semibold text-white hover:text-blue-100">
-                Lihat transaksi →
+            <h2 class="mt-3 text-3xl font-extrabold text-slate-900">{{ \App\Models\Category::count() }}</h2>
+            <p class="mt-2 text-xs text-slate-400">Kategori produk</p>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+                <p class="text-sm text-slate-500">Total Supplier</p>
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700"><x-icon name="truck" class="h-5 w-5" /></span>
+            </div>
+            <h2 class="mt-3 text-3xl font-extrabold text-slate-900">{{ \App\Models\Supplier::count() }}</h2>
+            <p class="mt-2 text-xs text-slate-400">Pemasok terdaftar</p>
+        </div>
+
+        <div class="spark-card-dark p-6">
+            <div class="flex items-center justify-between">
+                <p class="text-sm text-white/60">Transaksi Barang Masuk</p>
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 spark-star"><x-icon name="download" class="h-5 w-5" /></span>
+            </div>
+            <h2 class="mt-3 text-3xl font-extrabold">{{ \App\Models\StockIn::count() }}</h2>
+            <a href="{{ route('stock-ins.index') }}" class="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold spark-star">
+                Lihat transaksi <x-icon name="arrow-right" class="h-3.5 w-3.5" />
             </a>
         </div>
 
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-sm">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-indigo-100 text-sm">Transaksi Barang Keluar</p>
-                    <h2 class="text-3xl font-bold mt-2">
-                        {{ \App\Models\StockOut::count() }}
-                    </h2>
-                    <p class="text-indigo-100 text-xs mt-2">Total transaksi barang keluar</p>
-                </div>
-                <div class="text-5xl opacity-80">📤</div>
+        <div class="rounded-3xl bg-white p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+                <p class="text-sm text-slate-500">Transaksi Barang Keluar</p>
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700"><x-icon name="upload" class="h-5 w-5" /></span>
             </div>
-            <a href="{{ route('stock-outs.index') }}"
-               class="inline-block mt-5 text-sm font-semibold text-white hover:text-indigo-100">
-                Lihat transaksi →
+            <h2 class="mt-3 text-3xl font-extrabold text-slate-900">{{ \App\Models\StockOut::count() }}</h2>
+            <a href="{{ route('stock-outs.index') }}" class="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700">
+                Lihat transaksi <x-icon name="arrow-right" class="h-3.5 w-3.5" />
             </a>
         </div>
 
     </div>
 
     {{-- Daftar stok menipis --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
 
         <div class="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <div>
