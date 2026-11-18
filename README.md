@@ -38,10 +38,9 @@ Pencatatan stok secara manual rawan menimbulkan selisih data dan menyulitkan pel
 - PHP 8.3 atau lebih baru
 - Laravel 13
 - Blade (templating) dan Laravel Breeze (autentikasi)
-- SQLite (bawaan)
+- MySQL (database)
 - Laravel Sanctum (autentikasi API)
 - Vite dan npm (aset front-end)
-- Chart.js (grafik dashboard)
 - Git dan GitHub (kolaborasi)
 
 ## Konsep Laravel yang Diterapkan
@@ -65,7 +64,7 @@ Relasi utama: Category 1-N Product, Supplier 1-N StockIn, StockIn 1-N StockInIte
 
 ## Instalasi dan Menjalankan Aplikasi
 
-**Prasyarat:** PHP 8.3+ (dengan ekstensi `mbstring`, `fileinfo`, `openssl`, `curl`, `zip`, `gd`, dan `pdo_sqlite` atau `pdo_mysql`), Composer, Node.js, dan Git.
+**Prasyarat:** PHP 8.3+ (dengan ekstensi `mbstring`, `fileinfo`, `openssl`, `curl`, `zip`, `gd`, dan `pdo_mysql`), Composer, Node.js, Git, serta MySQL Server (bisa memakai XAMPP, Laragon, atau instalasi MySQL biasa).
 
 ```bash
 # 1. Clone repository
@@ -81,14 +80,43 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-**4. Siapkan database.** Dengan SQLite (bawaan), buat file databasenya:
+**4. Siapkan database MySQL.** Pastikan MySQL Server sudah berjalan, lalu buat database kosong bernama `stockmart`. Bisa lewat phpMyAdmin, atau lewat terminal:
 
 ```bash
-# Linux / macOS / Git Bash
-touch database/database.sqlite
-# Windows CMD
-type nul > database\database.sqlite
+mysql -u root -p -e "CREATE DATABASE stockmart CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 ```
+
+**5. Atur koneksi database di file `.env`.** Sesuaikan dengan konfigurasi MySQL di komputer masing-masing:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=stockmart
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+> Jika memakai XAMPP atau Laragon, user `root` biasanya tanpa password, sehingga `DB_PASSWORD` dibiarkan kosong.
+
+**6. Jalankan migration dan seeder** untuk membuat tabel beserta data awal (termasuk akun demo):
+
+```bash
+php artisan migrate --seed
+php artisan storage:link
+```
+
+**7. Jalankan aplikasi** (gunakan dua terminal):
+
+```bash
+# Terminal 1: server Laravel
+php artisan serve
+
+# Terminal 2: aset front-end
+npm run dev
+```
+
+Aplikasi dapat diakses di `http://127.0.0.1:8000`.
 
 ## Akun Demo
 
