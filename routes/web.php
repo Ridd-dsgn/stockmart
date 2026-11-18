@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StockInController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -8,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockMonitoringController;
+use App\Http\Controllers\StockOutController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -62,6 +64,32 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('stocks', [StockMonitoringController::class, 'index'])
         ->name('stocks.index');
+});
+
+require __DIR__.'/auth.php';
+// Barang Keluar - hanya pengguna yang sudah login
+Route::middleware('auth')->group(function () {
+    Route::get('stock-outs', [StockOutController::class, 'index'])
+        ->name('stock-outs.index');
+
+    Route::get('stock-outs/create', [StockOutController::class, 'create'])
+        ->name('stock-outs.create');
+
+    Route::post('stock-outs', [StockOutController::class, 'store'])
+        ->name('stock-outs.store');
+// Semua role boleh melihat daftar barang masuk
+Route::middleware('auth')->group(function () {
+    Route::get('stock-ins', [StockInController::class, 'index'])
+        ->name('stock-ins.index');
+});
+
+// Admin dan Petugas Gudang boleh membuat transaksi barang masuk
+Route::middleware(['auth', 'role:admin,petugas_gudang'])->group(function () {
+    Route::get('stock-ins/create', [StockInController::class, 'create'])
+        ->name('stock-ins.create');
+
+    Route::post('stock-ins', [StockInController::class, 'store'])
+        ->name('stock-ins.store');
 });
 
 require __DIR__.'/auth.php';
