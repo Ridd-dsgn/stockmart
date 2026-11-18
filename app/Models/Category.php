@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    public function products() { return $this->hasMany(Product::class); }
+    use LogsActivity;
+
     protected $fillable = ['name', 'description'];
+
+    public function products() { return $this->hasMany(Product::class); }
 }

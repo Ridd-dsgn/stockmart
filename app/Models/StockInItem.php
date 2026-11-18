@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StockInItem extends Model
 {
@@ -12,12 +13,12 @@ class StockInItem extends Model
         'qty',
     ];
 
-    public function stockIn()
+    public function stockIn(): BelongsTo
     {
         return $this->belongsTo(StockIn::class);
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
