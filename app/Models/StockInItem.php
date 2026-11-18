@@ -3,8 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StockInItem extends Model
 {
-    protected $fillable = ['stock_in_id', 'product_id', 'qty'];
+    protected $fillable = [
+        'stock_in_id',
+        'product_id',
+        'qty',
+    ];
+
+    public function stockIn(): BelongsTo
+    {
+        return $this->belongsTo(StockIn::class);
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
