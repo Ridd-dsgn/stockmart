@@ -8,6 +8,7 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockMonitoringController;
 use App\Http\Controllers\StockOutController;
 
 Route::get('/', function () {
@@ -59,6 +60,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('products', ProductController::class)->except(['index', 'show']);
 });
 
+// Semua role boleh melihat monitoring stok
+Route::middleware('auth')->group(function () {
+    Route::get('stocks', [StockMonitoringController::class, 'index'])
+        ->name('stocks.index');
+});
+
+require __DIR__.'/auth.php';
 // Barang Keluar - hanya pengguna yang sudah login
 Route::middleware('auth')->group(function () {
     Route::get('stock-outs', [StockOutController::class, 'index'])
