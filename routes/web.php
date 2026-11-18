@@ -7,6 +7,7 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockMonitoringController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,6 +56,12 @@ Route::middleware('auth')->group(function () {
 // Hanya Admin yang boleh tambah/ubah/hapus
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('products', ProductController::class)->except(['index', 'show']);
+});
+
+// Semua role boleh melihat monitoring stok
+Route::middleware('auth')->group(function () {
+    Route::get('stocks', [StockMonitoringController::class, 'index'])
+        ->name('stocks.index');
 });
 
 require __DIR__.'/auth.php';
