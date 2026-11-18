@@ -124,13 +124,54 @@
             <p class="mb-3 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
                 Menu Utama
             </p>
+@php
+    $role = auth()->user()->role;
 
-           @foreach ($menu as $item)
+    $allowedMenuRoutes = [
+        'admin' => [
+            'dashboard',
+            'products.index',
+            'categories.index',
+            'suppliers.index',
+            'stock-ins.index',
+            'stock-outs.index',
+            'stocks.index',
+            'reports.index',
+            'users.index',
+            'activity-logs.index',
+            'access-rights.index',
+        ],
+
+        'kepala_toko' => [
+            'dashboard',
+            'products.index',
+            'categories.index',
+            'suppliers.index',
+            'stock-ins.index',
+            'stock-outs.index',
+            'stocks.index',
+            'reports.index',
+        ],
+
+        'petugas_gudang' => [
+            'dashboard',
+            'products.index',
+            'categories.index',
+            'suppliers.index',
+            'stock-ins.index',
+            'stock-outs.index',
+            'stocks.index',
+            'reports.index',
+        ],
+    ];
+@endphp
+          @foreach ($menu as $item)
     @continue(!isset($item['route']) || !Route::has($item['route']))
-    @continue(!empty($item['can']) && auth()->user()->cannot($item['can']))
-                @php
-                    $isActive = request()->routeIs($item['active']);
-                @endphp
+    @continue(!in_array($item['route'], $allowedMenuRoutes[$role] ?? []))
+
+    @php
+        $isActive = request()->routeIs($item['active']);
+    @endphp
 
                 <a href="{{ route($item['route']) }}"
                    class="group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition
