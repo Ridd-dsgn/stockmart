@@ -12,12 +12,12 @@
             </p>
         </div>
 
-        @if (auth()->user()->can('manage-master') || auth()->user()->can('manage-stock'))
+        @can('manage-stock')
             <a href="{{ route('stock-outs.create') }}"
                class="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white shadow hover:bg-indigo-700">
                 + Tambah Barang Keluar
             </a>
-        @endif
+        @endcan
     </div>
 
     <div class="mb-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">

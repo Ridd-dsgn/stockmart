@@ -225,16 +225,6 @@
                 <x-icon name="menu" class="h-5 w-5" />
             </button>
 
-            {{-- Tombol aksi cepat --}}
-            @can('manage-master')
-                <a href="{{ route('products.create') }}"
-                   class="hidden h-11 items-center gap-2 rounded-2xl px-5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:inline-flex"
-                   style="background: var(--spark-dark);">
-                    <x-icon name="plus" class="h-4 w-4" />
-                    Tambah Barang
-                </a>
-            @endcan
-
             {{-- Pencarian --}}
             <form method="GET" action="{{ Route::has('products.index') ? route('products.index') : '#' }}"
                   class="relative ml-2 hidden max-w-xl flex-1 md:block">
