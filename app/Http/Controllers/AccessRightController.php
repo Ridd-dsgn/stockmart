@@ -55,7 +55,7 @@ class AccessRightController extends Controller
                 'name' => 'Laporan',
                 'admin' => 'Lihat',
                 'kepala_toko' => 'Lihat',
-                'petugas_gudang' => 'Lihat',
+                'petugas_gudang' => '-',
             ],
             [
                 'name' => 'Manajemen Pengguna',
