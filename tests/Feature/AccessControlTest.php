@@ -41,8 +41,16 @@ class AccessControlTest extends TestCase
     public function test_guest_is_redirected_from_all_protected_pages(): void
     {
         $urls = [
-            '/dashboard', '/products', '/categories', '/suppliers', '/stocks',
-            '/stock-ins', '/stock-outs', '/users', '/activity-logs', '/profile',
+            '/dashboard',
+            '/products',
+            '/categories',
+            '/suppliers',
+            '/stocks',
+            '/stock-ins',
+            '/stock-outs',
+            '/users',
+            '/activity-logs',
+            '/profile',
         ];
 
         foreach ($urls as $url) {
@@ -53,8 +61,14 @@ class AccessControlTest extends TestCase
     public function test_every_role_can_view_read_only_pages(): void
     {
         $urls = [
-            '/dashboard', '/products', '/categories', '/suppliers',
-            '/stocks', '/stock-ins', '/stock-outs', '/profile',
+            '/dashboard',
+            '/products',
+            '/categories',
+            '/suppliers',
+            '/stocks',
+            '/stock-ins',
+            '/stock-outs',
+            '/profile',
         ];
 
         foreach (self::ROLES as $role) {
@@ -67,8 +81,12 @@ class AccessControlTest extends TestCase
     public function test_only_admin_can_open_master_data_and_admin_pages(): void
     {
         $urls = [
-            '/products/create', '/categories/create', '/suppliers/create',
-            '/users', '/users/create', '/activity-logs',
+            '/products/create',
+            '/categories/create',
+            '/suppliers/create',
+            '/users',
+            '/users/create',
+            '/activity-logs',
         ];
 
         foreach ($urls as $url) {
@@ -113,5 +131,12 @@ class AccessControlTest extends TestCase
                 $this->assertSame(403, $status, "Role {$role} POST {$url} seharusnya 403.");
             }
         }
+    }
+
+    public function test_only_admin_and_store_manager_can_open_reports(): void
+    {
+        $this->assertStatusFor(200, 'admin', '/reports');
+        $this->assertStatusFor(200, 'kepala_toko', '/reports');
+        $this->assertStatusFor(403, 'petugas_gudang', '/reports');
     }
 }

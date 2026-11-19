@@ -104,7 +104,7 @@
     $allowedMenuRoutes = [
         'admin' => ['dashboard','products.index','categories.index','suppliers.index','stock-ins.index','stock-outs.index','stocks.index','reports.index','users.index','activity-logs.index','access-rights.index'],
         'kepala_toko' => ['dashboard','products.index','categories.index','suppliers.index','stock-ins.index','stock-outs.index','stocks.index','reports.index'],
-        'petugas_gudang' => ['dashboard','products.index','categories.index','suppliers.index','stock-ins.index','stock-outs.index','stocks.index','reports.index'],
+        'petugas_gudang' => ['dashboard','products.index','categories.index','suppliers.index','stock-ins.index','stock-outs.index','stocks.index'],
     ];
 
     $groups = [

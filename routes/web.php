@@ -60,7 +60,9 @@ Route::middleware(['auth', 'role:petugas_gudang'])->group(function () {
 
     Route::get('stock-outs/create', [StockOutController::class, 'create'])->name('stock-outs.create');
     Route::post('stock-outs', [StockOutController::class, 'store'])->name('stock-outs.store');
+});
 
+Route::middleware(['auth', 'role:admin,kepala_toko'])->group(function () {
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 });
 
